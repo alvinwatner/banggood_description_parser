@@ -1,7 +1,6 @@
 import pandas as pd
 from banggood_parser import BanggoodDescription
 
-#hashtag
 
 def produce_output(source_path = None, output_path = None):
     bangood_csv = pd.read_csv(source_path)
