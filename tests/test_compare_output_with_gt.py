@@ -1,4 +1,5 @@
 import pandas as pd
+from tqdm import tqdm
 from banggood_parser import BanggoodDescription
 
 
@@ -14,7 +15,8 @@ def compare_outputs_with_ground_truths(output_path = None, ground_truth_path = N
 
     #step 2 : check string data
 
-    for index in range(len(gt_bd)):
+    for index in tqdm(range(len(gt_bd)), desc='[TESTING]'):
+
         gt_description_data = gt_bd[index]
         o_description_data = o_bd[index]
 
@@ -26,4 +28,3 @@ output_path = f'/home/alvinwatner/banggood_description_parser/test_fixtures/outp
 ground_truth_path = f'/home/alvinwatner/banggood_description_parser/test_fixtures/ground_truths/{data_version}/grount_truth.csv'
 
 compare_outputs_with_ground_truths(output_path=output_path, ground_truth_path=ground_truth_path)
-
