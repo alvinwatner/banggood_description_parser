@@ -36,6 +36,10 @@ class Ui_MainWindow(object):
         self.error_output_path.setText("Please Specify Save Path")
         self.error_output_path.setIcon(QMessageBox.Warning)
 
+        self.info_done = QMessageBox()
+        self.info_done.setWindowTitle("Info")
+        self.info_done.setText("Done!")
+        self.info_done.setIcon(QMessageBox.Information)
 
         self.btn_load_excel = QtWidgets.QPushButton(self.centralwidget)
         self.btn_load_excel.setGeometry(QtCore.QRect(40, 10, 121, 31))
@@ -177,6 +181,9 @@ class Ui_MainWindow(object):
                     pbar_value += pbar_step
 
                 self.pbar_Run.setValue(pbar_value)
+
+        self.info_done.exec_()
+        self.pbar_Run.setValue(0)
 
 
 if __name__ == "__main__":
