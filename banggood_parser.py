@@ -13,7 +13,7 @@ class BanggoodDescription():
                                'Feature:', 'Features:',
                                'Description:', 'Descriptions:',
                                'Specification:', 'Specifications:',
-                               'Package included:', 'Package Included:']
+                               'Package included:', 'Package Included:', 'Package Includes :']
 
         self.banggood_csv = csv
         self.description_data = csv[' Product_Description_1']
