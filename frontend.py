@@ -40,17 +40,17 @@ class Ui_MainWindow(object):
         self.btn_load_excel = QtWidgets.QPushButton(self.centralwidget)
         self.btn_load_excel.setGeometry(QtCore.QRect(40, 10, 121, 31))
         self.btn_load_excel.setObjectName("btn_load_excel")        
-        self.btn_load_excel.clicked.connect(lambda: self.no_name())
+        self.btn_load_excel.clicked.connect(lambda: self.load_dataframe())
 
         self.btn_save_path = QtWidgets.QPushButton(self.centralwidget)
         self.btn_save_path.setGeometry(QtCore.QRect(40, 60, 121, 31))
         self.btn_save_path.setObjectName("btn_save_path")
-        self.btn_save_path.clicked.connect(lambda: self.no_name2())
+        self.btn_save_path.clicked.connect(lambda: self.open_output_path())
         
         self.btn_run = QtWidgets.QPushButton(self.centralwidget)
         self.btn_run.setGeometry(QtCore.QRect(180, 160, 121, 31))
         self.btn_run.setObjectName("btn_run")
-        self.btn_run.clicked.connect(lambda: self.no_name3())
+        self.btn_run.clicked.connect(lambda: self.run())
 
         self.lbl_output_file_name = QtWidgets.QLabel(self.centralwidget)
         self.lbl_output_file_name.setGeometry(QtCore.QRect(60, 110, 251, 31))
@@ -106,7 +106,7 @@ class Ui_MainWindow(object):
         self.btn_run.setText(_translate("MainWindow", "Run"))
 
 
-    def no_name(self):
+    def load_dataframe(self):
         try:
             dialog = QtWidgets.QFileDialog()
             file_path = dialog.getOpenFileName(None, "Select File")
@@ -115,7 +115,7 @@ class Ui_MainWindow(object):
         except:
             pass
 
-    def no_name2(self):
+    def open_output_path(self):
         try:
             dialog = QtWidgets.QFileDialog()
             self.output_path = dialog.getExistingDirectory(None, "Select Folder")
@@ -131,7 +131,7 @@ class Ui_MainWindow(object):
             pass
 
 
-    def no_name3(self):
+    def run(self):
 
         if self.banggood_csv is None:
             self.error_excel.exec_()
