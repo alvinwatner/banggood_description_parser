@@ -13,14 +13,29 @@ from banggood_parser import BanggoodDescription
 
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from PyQt5.QtWidgets import QMessageBox, QMainWindow, QLabel
 
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(458, 244)
+        MainWindow.resize(458, 274)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
+        self.output_path = None
+        self.banggood_csv = None
+
+        self.error_excel = QMessageBox()
+        self.error_excel.setWindowTitle("Error")
+        self.error_excel.setText("Please Load Excel File")
+        self.error_excel.setIcon(QMessageBox.Warning)
+
+        self.error_output_path = QMessageBox()
+        self.error_output_path.setWindowTitle("Error")
+        self.error_output_path.setText("Please Specify Save Path")
+        self.error_output_path.setIcon(QMessageBox.Warning)
+
 
         self.btn_load_excel = QtWidgets.QPushButton(self.centralwidget)
         self.btn_load_excel.setGeometry(QtCore.QRect(40, 10, 121, 31))
@@ -33,12 +48,12 @@ class Ui_MainWindow(object):
         self.btn_save_path.clicked.connect(lambda: self.no_name2())
         
         self.btn_run = QtWidgets.QPushButton(self.centralwidget)
-        self.btn_run.setGeometry(QtCore.QRect(180, 150, 121, 31))
+        self.btn_run.setGeometry(QtCore.QRect(180, 160, 121, 31))
         self.btn_run.setObjectName("btn_run")
         self.btn_run.clicked.connect(lambda: self.no_name3())
 
         self.lbl_output_file_name = QtWidgets.QLabel(self.centralwidget)
-        self.lbl_output_file_name.setGeometry(QtCore.QRect(60, 100, 251, 31))
+        self.lbl_output_file_name.setGeometry(QtCore.QRect(60, 110, 251, 31))
         font = QtGui.QFont()
         font.setPointSize(12)
         self.lbl_output_file_name.setFont(font)
@@ -46,7 +61,7 @@ class Ui_MainWindow(object):
 
 
         self.tb_output_file_name = QtWidgets.QLineEdit(self.centralwidget)
-        self.tb_output_file_name.setGeometry(QtCore.QRect(180, 100, 251, 31))
+        self.tb_output_file_name.setGeometry(QtCore.QRect(180, 110, 251, 31))
         self.tb_output_file_name.setObjectName("tb_output_file_name")        
                 
 
@@ -61,7 +76,7 @@ class Ui_MainWindow(object):
         self.display_save_output_path.setReadOnly(True)
                 
         self.pbar_Run = QtWidgets.QProgressBar(self.centralwidget)
-        self.pbar_Run.setGeometry(QtCore.QRect(70, 200, 361, 23))
+        self.pbar_Run.setGeometry(QtCore.QRect(60, 210, 361, 23))
         self.pbar_Run.setProperty("value", 0)
         self.pbar_Run.setObjectName("pbar_Run")
         
@@ -92,67 +107,76 @@ class Ui_MainWindow(object):
 
 
     def no_name(self):
-
-        dialog = QtWidgets.QFileDialog()
-        file_path = dialog.getOpenFileName(None, "Select File")
-        self.banggood_csv = pd.read_csv(file_path[0])
-        self.display_load_excel_path.setText(f"Excel Successfully Loaded")
+        try:
+            dialog = QtWidgets.QFileDialog()
+            file_path = dialog.getOpenFileName(None, "Select File")
+            self.banggood_csv = pd.read_csv(file_path[0])
+            self.display_load_excel_path.setText(file_path[0])
+        except:
+            pass
 
     def no_name2(self):
+        try:
+            dialog = QtWidgets.QFileDialog()
+            self.output_path = dialog.getExistingDirectory(None, "Select Folder")
 
-        dialog = QtWidgets.QFileDialog()
-        self.output_path = dialog.getExistingDirectory(None, "Select Folder")
-        
-        if ':' in self.output_path:
-            index = self.output_path.index(':')
-            self.output_path = self.output_path[index + 1:]
-        
-        self.output_path += '/'
+            if ':' in self.output_path:
+                index = self.output_path.index(':')
+                self.output_path = self.output_path[index + 1:]
 
-        self.display_save_output_path.setText(self.output_path)
+            self.output_path += '/'
+
+            self.display_save_output_path.setText(self.output_path)
+        except:
+            pass
 
 
     def no_name3(self):
 
-        output_file_name = self.tb_output_file_name.text()
-        
-        if output_file_name == '':
-            output_file_name = 'default'
+        if self.banggood_csv is None:
+            self.error_excel.exec_()
+        elif self.output_path is None:
+            self.error_output_path.exec_()
+        else:
 
-        bd = BanggoodDescription(self.banggood_csv)
+            output_file_name = self.tb_output_file_name.text()
 
-        # progress bar range of value : 0 - 100        
-        # init value from 0
-        pbar_value = 0        
-        # max value 
-        pbar_max_value = 100
+            if output_file_name == '':
+                output_file_name = 'default'
 
-        # every step increment value
-        pbar_step = int(pbar_max_value/len(bd))
-        
-        # final step increment value
-        pbar_final_step = pbar_max_value % len(bd) + pbar_step
+            bd = BanggoodDescription(self.banggood_csv)
 
-        for index in range(len(bd)):
+            # progress bar range of value : 0 - 100
+            # init value from 0
+            pbar_value = 0
+            # max value
+            pbar_max_value = 100
 
-            html = bd[index]
-            parsed_data, stored_descriptions = bd.parse_html(html)
+            # every step increment value
+            pbar_step = int(pbar_max_value/len(bd))
 
-            cur_time = datetime.datetime.now()
-                        
+            # final step increment value
+            pbar_final_step = pbar_max_value % len(bd) + pbar_step
 
-            full_output_path = self.output_path + \
-            f'{output_file_name}_{cur_time.year}-{cur_time.month}-{cur_time.day}_jam_{cur_time.hour}-{cur_time.minute}.csv'
-            
-            bd.export_to_banggood_csv(full_output_path, index = index, description = stored_descriptions)
+            for index in range(len(bd)):
 
-            if index == len(bd) - 1:
-                pbar_value += pbar_final_step
-            else:
-                pbar_value += pbar_step
-                            
-            
-            self.pbar_Run.setValue(pbar_value)
+                html = bd[index]
+                parsed_data, stored_descriptions = bd.parse_html(html)
+
+                cur_time = datetime.datetime.now()
+
+
+                full_output_path = self.output_path + \
+                f'{output_file_name}_{cur_time.year}-{cur_time.month}-{cur_time.day}_jam_{cur_time.hour}-{cur_time.minute}.csv'
+
+                bd.export_to_banggood_csv(full_output_path, index = index, description = stored_descriptions)
+
+                if index == len(bd) - 1:
+                    pbar_value += pbar_final_step
+                else:
+                    pbar_value += pbar_step
+
+                self.pbar_Run.setValue(pbar_value)
 
 
 if __name__ == "__main__":
