@@ -165,15 +165,7 @@ class Ui_MainWindow(object):
             for index in range(len(bd)):
 
                 html = bd[index]
-                parsed_data, stored_descriptions = bd.parse_html(html)
-
-                cur_time = datetime.datetime.now()
-
-
-                full_output_path = self.output_path + \
-                f'{output_file_name}_{cur_time.year}-{cur_time.month}-{cur_time.day}_jam_{cur_time.hour}-{cur_time.minute}.csv'
-
-                bd.export_to_banggood_csv(full_output_path, index = index, description = stored_descriptions)
+                _, _ = bd.parse_html(html)
 
                 if index == len(bd) - 1:
                     pbar_value += pbar_final_step
@@ -182,7 +174,15 @@ class Ui_MainWindow(object):
 
                 self.pbar_Run.setValue(pbar_value)
 
-        self.info_done.exec_()
+            cur_time = datetime.datetime.now()
+
+            full_output_path = self.output_path + \
+            f'{output_file_name}_{cur_time.year}-{cur_time.month}-{cur_time.day}_jam_{cur_time.hour}-{cur_time.minute}.csv'
+
+            bd.export_to_banggood_csv(full_output_path)
+
+        if pbar_value == 100:
+            self.info_done.exec_()
         self.pbar_Run.setValue(0)
 
 
