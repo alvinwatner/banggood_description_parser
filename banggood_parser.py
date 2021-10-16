@@ -16,7 +16,13 @@ class BanggoodDescription():
                                'Package included:', 'Package Included:', 'Package Includes :']
 
         self.banggood_csv = csv
-        self.description_data = csv[' Product_Description_1']
+        prodID_key = 'Product_ID'
+
+        self.desc_key = 'description'
+        self.description_data = csv[self.desc_key]
+
+        self.output_df = {prodID_key : self.banggood_csv[prodID_key],
+                          'description': []}
 
     def __getitem__(self, idx):
         return self.description_data[idx]
@@ -63,6 +69,19 @@ class BanggoodDescription():
 
         if list_of_titles is None:
             list_of_titles = self.list_of_titles
+
+        # If field is empty
+        if pd.isna(html):
+            nan_string = 'Maaf deskripsi produk dibuat kosong karena alasan tertentu. Harap chat untuk info lebih detail'
+            stored_descriptions = nan_string
+            parsed_data = nan_string
+            return parsed_data, stored_descriptions
+
+        if html == ' ':
+            nan_string = 'Maaf deskripsi produk dibuat kosong karena alasan tertentu. Harap chat untuk info lebih detail'
+            stored_descriptions = nan_string
+            parsed_data = nan_string
+            return parsed_data, stored_descriptions
 
         soup = bs(html, features="html.parser")
 
@@ -206,14 +225,19 @@ class BanggoodDescription():
     def parse_html(self, html):
         parsed_data, stored_descriptions = self.read(html)
         if len(parsed_data) == 0:
-            print(f"empty")
             parsed_data, stored_descriptions = self.read(html, extract_all=True)
+
+        if len(stored_descriptions) < 10:
+            nan_string = 'Maaf deskripsi produk dibuat kosong karena alasan tertentu. Harap chat untuk info lebih detail'
+            stored_descriptions = nan_string
+
+        self.output_df['description'].append(stored_descriptions)
 
         return parsed_data, stored_descriptions
 
     def convert_bangood_to_toped(self, path=None, index=None, description=None):
         pass
 
-    def export_to_banggood_csv(self, path, index=None, description=None):
-        self.banggood_csv[' Product_Description_1'][index] = description
-        self.banggood_csv.to_csv(path)
+    def export_to_banggood_csv(self, path):
+        df = pd.DataFrame(self.output_df)
+        df.to_csv(path, index = False)
