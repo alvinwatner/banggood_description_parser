@@ -1,17 +1,38 @@
-## Banggood Description Parser
-The purpose of this repository is to parse the 'product_info.csv' that you can obtained from banggood marketplace and do the following
-* Read the html script
-* Extract the content within the title that we care about (e.g., Features, Specifications)
+## Purpose
+The purpose of this repository is to extract the description content from banggood marketplace.
+
+## Who will benefit from this project:
+The people that intend to Dropship the product from Banggood to other local market place (for e.g., Tokopedia, Bukalapak)
+
+## Challenges:
+* The product page dynamically changing from one to another
+* Inconsistency html script
+* Inconsistency description titles (for e.g., Product 1 had title : "Package Include" while product 2 : "Package Includes")
+* The content that in the form of table.
+
+## Objective:
+* To create an algorithm that able to identify the variety of description contents (for e.g., Features, specifications) and extract the content within while maintaining the readability of the extracted result.
+* Maximize the number of "identified contents" and improve the readbility as indication of robust algorithm.
+
+## Future to-do list:
+1. Improve the sanity check - What I had in mind :
+    1. Add flag to mark the unidentified content. 
+    2. Create a file that stored the **lowest** number of flag from N number of sample test.
+    3. For every updated algorithm, run a script that compare the output with the **lowest**.
+    4. If the updated algorithm ouput lower than the previous **lowest**, then it approved to
+	      perform better.
 
 
-## Sanity Check Mechanism
-The current mechanism to evaluate any updated algorithm is by using the **test/test_compare_output_with_gt.py** script. This script simply compare if the updated script 'outputs' == 'grount_truths'. 
+## Authors Info
+```
+----------------------------------------
+Author  : Alvin Watner
+Email   : alvinsetiadi22@gmail.com
+Website : -
+License : MIT
+----------------------------------------
+```
 
-To update the 'grount_truths', it should satisfied the following :
-1) Failed to run testing script.
-2) The reason it is failed is because the updated script result in an 'outputs' contents that is **better** than the previous 'ground_truths'.
+## License
 
-To determine if it is **better** or **worse** is :
-1) It is **better** : When the ouput contents is less-truncated and more readable.
-2) It is **worse** : When the ouput contents get truncated more and less readable.
-
+This project is licensed under the MIT License - see the [LICENSE.md](LICENSE.md) file for details
