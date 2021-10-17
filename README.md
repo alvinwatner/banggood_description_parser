@@ -5,10 +5,10 @@ The purpose of this repository is to extract the description content from banggo
 The people that intend to Dropship the product from Banggood to other local market place (for e.g., Tokopedia, Bukalapak)
 
 ## Challenges:
-* The product page dynamically changing from one to another
-* Inconsistency html script
-* Inconsistency description titles (for e.g., Product 1 had title : "Package Include" while product 2 : "Package Includes")
-* The content that in the form of table.
+* The products page dynamically changing from one to another.
+* Inconsistency html script.
+* Inconsistency description titles (for e.g., Product 1 had title : "Package Include" while product 2 : "Package Includes").
+* Many contents that formed in table.
 
 ## Objective:
 * To create an algorithm that able to identify the variety of description contents (for e.g., Features, specifications) and extract the content within while maintaining the readability of the extracted result.
