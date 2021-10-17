@@ -8,7 +8,7 @@ The people that intend to Dropship the product from Banggood to other local mark
 * The products page dynamically changing from one to another.
 * Inconsistency html script.
 * Inconsistency description titles (for e.g., Product 1 had title : "Package Include" while product 2 : "Package Includes").
-* Many contents that formed in table.
+* The content description that formed in table require extra postprocessing to transformed it intro readable text.
 
 ## Objective:
 * To create an algorithm that able to identify the variety of description contents (for e.g., Features, specifications) and extract the content within while maintaining the readability of the extracted result.
